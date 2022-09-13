@@ -1,0 +1,54 @@
+{
+  "name": "wdio-v7-testrail-reporter",
+  "version": "0.0.1",
+  "description": "A Testrail reporter for WebdriverIO v7 including TestRail API basic library",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "private": false,
+  "keywords": [
+    "mocha",
+    "webdriverio",
+    "testrail",
+    "reporter"
+  ],
+  "author": {
+    "name": "Chanatan Charnkijtawarush",
+    "email": "ccharnkij@gmail.com"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ccharnkij/wdio-v7-testrail-reporter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ccharnkij/wdio-v7-testrail-reporter/issues"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "clean": "rimraf dist",
+    "test": "mocha dist/test",
+    "prettier": "prettier --single-quote --print-width=100 --trailing-comma=all --write './src/**/*.{js,jsx,ts,tsx}'",
+    "build": "yarn clean && yarn prettier && yarn tsc"
+  },
+  "dependencies": {
+    "btoa": "^1.1.2",
+    "unirest": "^0.5.1"
+  },
+  "peerDependencies": {
+    "mocha": "^3 || ^2.2.5"
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.36",
+    "@types/node": "^6.0.58",
+    "@wdio/logger": "^6.0.16",
+    "@wdio/reporter": "^7.17.3",
+    "axios": "^0.19.2",
+    "chai": "^3.5.0",
+    "mocha": "^8.0.1",
+    "prettier": "^2.0.5",
+    "rimraf": "^2.5.4",
+    "typescript": "^2.1.4"
+  }
+}
