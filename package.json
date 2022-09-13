@@ -1,5 +1,5 @@
 {
-  "name": "wdio-v7-testrail-reporter",
+  "name": "wdio-testrail-v7-reporter",
   "version": "0.0.1",
   "description": "A Testrail reporter for WebdriverIO v7 including TestRail API basic library",
   "main": "index.js",
