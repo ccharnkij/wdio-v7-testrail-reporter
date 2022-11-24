@@ -1,18 +1,16 @@
 import logger from '@wdio/logger';
-import WDIOReporter from '@wdio/reporter';
+import WDIOReporter, { TestStats } from '@wdio/reporter';
 import { TestRail } from './testrail';
 import { Status } from './testrail.interface';
 import { titleToCaseIds } from './shared';
+import { events } from './event.type';
 
 export default class TestRailReporter extends WDIOReporter {
   public options;
   private log;
   private results;
-  private passes;
-  private fails;
-  private pending;
-  private out;
   private runId;
+  private comments;
 
   public client = new TestRail(this.options);
   constructor(options) {
@@ -28,10 +26,12 @@ export default class TestRailReporter extends WDIOReporter {
     // compute base url
     this.options = options;
     this.results = [];
-    this.passes = 0;
-    this.fails = 0;
-    this.pending = 0;
-    this.out = [];
+    this.comments = '';
+    this.registerListeners();
+  }
+
+  registerListeners() {
+    process.on(events.addComment, this.addComments.bind(this));
   }
 
   async onSuiteStart() {
@@ -39,44 +39,41 @@ export default class TestRailReporter extends WDIOReporter {
     this.runId = lastRun.runs[0].id;
   }
 
-  onTestPass(test) {
-    this.passes++;
-    this.out.push(test.title + ': pass');
-    let caseIds = titleToCaseIds(test.title);
-    if (caseIds.length > 0) {
-      if (test.speed === 'fast') {
-        let results = caseIds.map((caseId) => {
-          return {
-            case_id: caseId,
-            status_id: Status.Passed,
-            comment: test.title,
-          };
-        });
-        this.results.push(...results);
-      } else {
-        let results = caseIds.map((caseId) => {
-          return {
-            case_id: caseId,
-            status_id: Status.Passed,
-            comment: `${test.title} (${test.duration}ms)`,
-          };
-        });
-        this.results.push(...results);
-      }
-    }
-    this.client.addResultsForCases(this.runId, this.results);
+  onTestStart(test) {
+    this.results = [];
+    this.comments = '';
   }
 
-  async onTestFail(test) {
-    this.fails++;
-    this.out.push(test.title + ': fail');
+  onTestPass(test) {
     let caseIds = titleToCaseIds(test.title);
     if (caseIds.length > 0) {
       let results = caseIds.map((caseId) => {
         return {
           case_id: caseId,
+          status_id: Status.Passed,
+          comment: this.comments,
+          elapsed: test.duration,
+        };
+      });
+      this.results.push(...results);
+    }
+    this.client.addResultsForCases(this.runId, this.results);
+  }
+
+  async onTestFail(test) {
+    let caseIds = titleToCaseIds(test.title);
+
+    if (this.comments != '') {
+      this.comments += '\n';
+    }
+
+    if (caseIds.length > 0) {
+      let results = caseIds.map((caseId) => {
+        return {
+          case_id: caseId,
           status_id: Status.Failed,
-          comment: `${test.error.message}`,
+          comment: `${this.comments}${test.error.message}`,
+          elapsed: test.duration,
         };
       });
       this.results.push(...results);
@@ -100,4 +97,12 @@ export default class TestRailReporter extends WDIOReporter {
       throw new Error(`Missing ${name} option value. Please look into documentation`);
     }
   }
+
+  addComments(args) {
+    this.comments += args + '\n';
+  }
+
+  static addComment = (value) => {
+    process.emit(events.addComment, value);
+  };
 }

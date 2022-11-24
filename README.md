@@ -65,6 +65,16 @@ async function createTestRun() {
     }
 ```
 
+## Custom comments
+
+Comments can be added to the report by using the `addComment` event.
+
+```
+import TestRailReporter from 'wdio-testrail-v7-reporter';
+
+TestRailReporter.addComment('test')
+```
+
 ## FAQ
 
 _Why is it only updating last test run and not creating test run inside reporter itself?_
