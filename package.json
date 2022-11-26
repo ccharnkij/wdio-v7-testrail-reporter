@@ -1,6 +1,6 @@
 {
   "name": "wdio-testrail-v7-reporter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Testrail reporter for WebdriverIO v7 including TestRail API basic library",
   "main": "index.js",
   "types": "index.d.ts",
@@ -34,9 +34,6 @@
   "dependencies": {
     "btoa": "^1.1.2",
     "unirest": "^0.5.1"
-  },
-  "peerDependencies": {
-    "mocha": "^3 || ^2.2.5"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",

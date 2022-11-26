@@ -1,4 +1,4 @@
-# WebdriverIO v7 Mocha Testrail Reporter
+# WebdriverIO v7 Testrail Reporter
 
 ====================
 > A WebdriverIO v7 reporter for Testrail. It will update last test run you have on testrail.
